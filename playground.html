@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Londrina+Solid:wght@100;300;400;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🚀%3C/text%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="styles.css?v=60" />
+  <link rel="stylesheet" href="styles.css?v=66" />
 </head>
 <body class="intro sidebar-collapsed">
   <div id="c-ring"></div>
@@ -88,7 +88,12 @@
     <div class="me-photo-card" style="top:190px; left:40px;">
       <span class="me-tape me-tape-l"></span>
       <span class="me-tape me-tape-r"></span>
-      <div class="me-photo-frame"><img src="assets/yifan-yang-profile.png" alt="杨一帆形象照" draggable="false"></div>
+      <div class="me-photo-frame">
+        <picture>
+          <source srcset="assets/yifan-yang-profile.avif" type="image/avif">
+          <img src="assets/yifan-yang-profile-480.png" width="480" height="600" alt="杨一帆形象照" fetchpriority="high" decoding="async" draggable="false">
+        </picture>
+      </div>
       <div class="me-photo-caption">杨一帆 · AI GTM</div>
     </div>
 
@@ -115,7 +120,12 @@
     <div class="tl-node tl-down" style="left:990px;"><span class="tl-year">2024.06 — 2025.05</span><span class="tl-dot"></span><span class="tl-link"></span></div>
     <div class="tl-node tl-down tl-node-graduation" style="left:1140px;"><span class="tl-year">2025.06</span><span class="tl-dot"></span><span class="tl-link"></span></div>
     <div class="graduation-milestone" style="left:1140px;" aria-label="2025年6月，南京大学毕业">
-      <span class="graduation-crest" aria-hidden="true"><img src="assets/nju-emblem-color-guide.png" alt="" draggable="false"></span>
+      <span class="graduation-crest" aria-hidden="true">
+        <picture>
+          <source srcset="assets/nju-emblem-256.avif" type="image/avif">
+          <img src="assets/nju-emblem-256.png" width="256" height="256" alt="" loading="lazy" decoding="async" draggable="false">
+        </picture>
+      </span>
       <span class="graduation-copy"><strong>毕业</strong></span>
     </div>
     <div class="tl-node tl-up" style="left:1240px;"><span class="tl-year">2025.06 — 2025.11</span><span class="tl-dot"></span><span class="tl-link"></span></div>
@@ -125,10 +135,10 @@
     <div id="ip-companion" class="ip-companion" data-action="idle" data-direction="right" style="top:760px; left:1060px;" role="button" tabindex="0" aria-label="杨一帆个人 IP 动态角色，点击切换动作">
       <div class="ip-figure">
         <div class="ip-idle-art" aria-hidden="true">
-          <img class="ip-layer ip-body" src="assets/personal-ip/ip-basic-front-base.png" alt="" draggable="false">
-          <span class="ip-pupil-track"><img class="ip-pupils" src="assets/personal-ip/ip-basic-front-pupils.png" alt="" draggable="false"></span>
+          <img class="ip-layer ip-body" src="assets/personal-ip/ip-basic-front-base.png" alt="" decoding="async" draggable="false">
+          <span class="ip-pupil-track"><img class="ip-pupils" src="assets/personal-ip/ip-basic-front-pupils.png" alt="" decoding="async" draggable="false"></span>
         </div>
-        <img id="ip-action-art" class="ip-action-art" src="assets/personal-ip/ip-basic-wave.png" alt="" draggable="false" aria-hidden="true">
+        <img id="ip-action-art" class="ip-action-art" src="assets/personal-ip/ip-basic-wave.png" alt="" decoding="async" draggable="false" aria-hidden="true">
       </div>
     </div>
 
@@ -293,6 +303,6 @@
   <button id="back-btn" aria-label="返回作品集">返回作品集</button>
   <button id="canvasResetBtn" aria-label="重置画布">↺ 重置画布</button>
 
-  <script src="app.js?v=60" defer></script>
+  <script src="app.js?v=66" defer></script>
 </body>
 </html>

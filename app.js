@@ -108,13 +108,15 @@ const PROJECT_IMAGE_SETS = {
   tree: 'community-education'
 };
 
+const MOBILE_QUERY = '(max-width: 900px)';
+
 const FOLDER_META = {
-  clacky: { title: 'ClackyAI', role: 'AI Agent · GTM 负责人', brand: 'OpenClacky' },
-  topp: { title: '托普科技', role: '电商运营', brand: 'TUOPU' },
-  asus: { title: '华硕电脑', role: '品牌运营 · 内容增长', brand: 'ASUS / ROG' },
-  sheng: { title: '生生科技', role: '市场策略 · 商业化', brand: 'EVERLASTING AI' },
-  campus: { title: '校园集市', role: '0→1 产品 · 冷启动', brand: 'CAMPUS' },
-  tree: { title: '树成林教育', role: '内容负责', brand: 'TREE EDU' }
+  clacky: { title: 'ClackyAI', role: 'AI Agent · GTM 负责人', brand: 'OpenClacky', date: '2025.12 — 至今' },
+  topp: { title: '托普科技', role: '电商运营', brand: 'TUOPU', date: '2025.06 — 2025.11' },
+  asus: { title: '华硕电脑', role: '品牌运营 · 内容增长', brand: 'ASUS / ROG', date: '2023.07 — 2023.08' },
+  sheng: { title: '生生科技', role: '市场策略 · 商业化', brand: 'EVERLASTING AI', date: '2024.06 — 2025.05' },
+  campus: { title: '校园集市', role: '0→1 产品 · 冷启动', brand: 'CAMPUS', date: '2023.04 — 2024.03' },
+  tree: { title: '树成林教育', role: '内容负责', brand: 'TREE EDU', date: '2022.07 — 2023.01' }
 };
 
 const FOLDER_PREVIEW_LAYOUTS = {
@@ -155,43 +157,49 @@ function getProjectPreviewImage(key, index) {
 }
 
 function decorateFolders() {
+  const mobileLayout = window.matchMedia(MOBILE_QUERY).matches;
   document.querySelectorAll('.folder').forEach(folder => {
     const key = folder.dataset.project;
     const meta = FOLDER_META[key];
     if (!meta) return;
 
-    const stack = document.createElement('div');
-    stack.className = 'folder-preview-stack';
-    const previews = (PROJECTS[key]?.previews || []).slice(0, 5);
-    const fanLayout = FOLDER_PREVIEW_LAYOUTS[previews.length] || FOLDER_PREVIEW_LAYOUTS[5];
-    const center = (previews.length - 1) / 2;
-    stack.dataset.count = String(previews.length);
-    previews.forEach((preview, index) => {
-      const src = getProjectPreviewImage(key, index);
-      if (!src) return;
-      const fan = fanLayout[index];
-      const image = document.createElement('img');
-      image.className = 'folder-preview';
-      image.src = src;
-      image.alt = '';
-      image.loading = 'eager';
-      image.draggable = false;
-      image.style.objectFit = preview.fit || 'cover';
-      image.style.background = preview.bg || '#fff';
-      image.style.setProperty('--peek-x', `${(index - center) * 10}px`);
-      image.style.setProperty('--peek-y', `${Math.abs(index - center) * 3}px`);
-      image.style.setProperty('--peek-r', `${(index - center) * 3.2}deg`);
-      image.style.setProperty('--peek-scale', `${.82 + index * .008}`);
-      image.style.setProperty('--fan-x', `${fan.x}px`);
-      image.style.setProperty('--fan-y', `${fan.y}px`);
-      image.style.setProperty('--fan-r', `${fan.r}deg`);
-      image.style.setProperty('--fan-scale', `${fan.scale}`);
-      image.style.setProperty('--fan-delay', `${index * 38}ms`);
-      image.style.setProperty('--fan-z', `${10 - Math.round(Math.abs(index - center))}`);
-      stack.appendChild(image);
-    });
-    folder.insertBefore(stack, folder.querySelector('.folder-svg'));
+    if (!mobileLayout) {
+      const stack = document.createElement('div');
+      stack.className = 'folder-preview-stack';
+      const previews = (PROJECTS[key]?.previews || []).slice(0, 5);
+      const fanLayout = FOLDER_PREVIEW_LAYOUTS[previews.length] || FOLDER_PREVIEW_LAYOUTS[5];
+      const center = (previews.length - 1) / 2;
+      stack.dataset.count = String(previews.length);
+      previews.forEach((preview, index) => {
+        const src = getProjectPreviewImage(key, index);
+        if (!src) return;
+        const fan = fanLayout[index];
+        const image = document.createElement('img');
+        image.className = 'folder-preview';
+        image.src = src;
+        image.alt = '';
+        image.loading = 'lazy';
+        image.decoding = 'async';
+        image.draggable = false;
+        image.style.objectFit = preview.fit || 'cover';
+        image.style.background = preview.bg || '#fff';
+        image.style.setProperty('--peek-x', `${(index - center) * 10}px`);
+        image.style.setProperty('--peek-y', `${Math.abs(index - center) * 3}px`);
+        image.style.setProperty('--peek-r', `${(index - center) * 3.2}deg`);
+        image.style.setProperty('--peek-scale', `${.82 + index * .008}`);
+        image.style.setProperty('--fan-x', `${fan.x}px`);
+        image.style.setProperty('--fan-y', `${fan.y}px`);
+        image.style.setProperty('--fan-r', `${fan.r}deg`);
+        image.style.setProperty('--fan-scale', `${fan.scale}`);
+        image.style.setProperty('--fan-delay', `${index * 38}ms`);
+        image.style.setProperty('--fan-z', `${10 - Math.round(Math.abs(index - center))}`);
+        stack.appendChild(image);
+      });
+      folder.insertBefore(stack, folder.querySelector('.folder-svg'));
+    }
     folder.tabIndex = 0;
+    folder.setAttribute('role', 'button');
+    folder.setAttribute('aria-label', `打开${meta.title}项目`);
 
     const brand = document.createElement('div');
     brand.className = 'folder-brand';
@@ -213,13 +221,16 @@ function decorateFolders() {
 /* ====================================================
    STATE
 ==================================================== */
-const IS_MOBILE_LAYOUT = window.matchMedia('(max-width: 768px)').matches;
-const isMobileLayout = () => window.matchMedia('(max-width: 768px)').matches;
-// Matches the source composition at 1280px: first folder starts near x=90,
-// with the resume and Me Board aligned beneath the same five-column row.
+const isMobileLayout = () => window.matchMedia(MOBILE_QUERY).matches;
+const DESKTOP_STAGE_WIDTH = 1600;
+const DESKTOP_STAGE_HEIGHT = 780;
+const DESKTOP_MAX_SCALE = 1.2;
 const INITIAL_PAN_X = 0;
-const INITIAL_PAN_Y = IS_MOBILE_LAYOUT ? 0 : -28;
+const INITIAL_PAN_Y = 0;
 let panX = INITIAL_PAN_X, panY = INITIAL_PAN_Y;
+let desktopScale = .92;
+let desktopOffsetX = 0;
+let desktopOffsetY = 24;
 let isPanning = false, panStartX, panStartY;
 let pointerMoved = false;
 let pointerDownX = 0, pointerDownY = 0;
@@ -229,6 +240,7 @@ let craftMode = false;
 let sidebarCollapsed = false;
 
 const canvas = document.getElementById('canvas');
+const hero = document.getElementById('hero');
 const cRing = document.getElementById('c-ring');
 const sidebar = document.getElementById('sidebar');
 const backBtn = document.getElementById('back-btn');
@@ -240,6 +252,86 @@ const heroDesign = document.getElementById('hero-design-mode');
 const heroPlay = document.getElementById('hero-play-mode');
 const ipCompanion = document.getElementById('ip-companion');
 const ipActionArt = document.getElementById('ip-action-art');
+
+function updateDesktopStageMetrics() {
+  if (isMobileLayout()) {
+    desktopScale = 1;
+    desktopOffsetX = 0;
+    desktopOffsetY = 0;
+    return;
+  }
+  const availableWidth = Math.max(640, window.innerWidth - 48);
+  const availableHeight = Math.max(520, window.innerHeight - 40);
+  desktopScale = clamp(.58, Math.min(availableWidth / DESKTOP_STAGE_WIDTH, availableHeight / DESKTOP_STAGE_HEIGHT), DESKTOP_MAX_SCALE);
+  desktopOffsetX = Math.max(24, (window.innerWidth - DESKTOP_STAGE_WIDTH * desktopScale) / 2);
+  const spareHeight = Math.max(0, window.innerHeight - DESKTOP_STAGE_HEIGHT * desktopScale);
+  desktopOffsetY = clamp(24, spareHeight * .22, 112);
+}
+
+function getCanvasScale() {
+  return isMobileLayout() ? 1 : desktopScale;
+}
+
+function buildMobileTimeline() {
+  if (!isMobileLayout() || document.getElementById('mobile-timeline')) return;
+  const timeline = document.createElement('section');
+  timeline.id = 'mobile-timeline';
+  timeline.setAttribute('aria-label', '项目经历时间线');
+  timeline.innerHTML = `<div class="mobile-timeline-head"><span>WORK TIMELINE</span><strong>项目经历</strong><small>点击查看项目详情</small></div>`;
+
+  const list = document.createElement('div');
+  list.className = 'mobile-project-list';
+  const order = ['tree', 'campus', 'asus', 'sheng', 'graduation', 'topp', 'clacky'];
+  order.forEach(key => {
+    if (key === 'graduation') {
+      const row = document.createElement('div');
+      row.className = 'mobile-project-row mobile-graduation-row';
+      row.innerHTML = `<div class="mobile-folder-thumb mobile-graduation-thumb"><span class="mobile-graduation-crest"><picture><source srcset="assets/nju-emblem-256.avif" type="image/avif"><img src="assets/nju-emblem-256.png" width="256" height="256" alt="" loading="lazy" decoding="async"></picture></span></div><div class="mobile-project-row-copy"><span class="mobile-project-date">2025.06</span><strong>毕业</strong><small>阶段节点</small></div>`;
+      list.appendChild(row);
+      return;
+    }
+
+    const folder = document.getElementById(`f-${key}`);
+    const meta = FOLDER_META[key];
+    if (!folder || !meta) return;
+    const row = document.createElement('div');
+    row.className = 'mobile-project-row';
+    row.tabIndex = 0;
+    row.setAttribute('role', 'button');
+    row.setAttribute('aria-label', `打开${meta.title}项目`);
+    const thumb = document.createElement('div');
+    thumb.className = `mobile-folder-thumb mobile-folder-${key}`;
+    const brand = document.createElement('span');
+    brand.className = 'mobile-folder-brand';
+    brand.textContent = meta.brand;
+    thumb.appendChild(brand);
+    const copy = document.createElement('div');
+    copy.className = 'mobile-project-row-copy';
+    copy.innerHTML = `<span class="mobile-project-date">${meta.date}</span><strong>${meta.title}</strong><small>${meta.role}</small>`;
+    row.append(thumb, copy);
+    const activate = () => {
+      if (openFolderId || folderClosing) return;
+      openFolder(folder);
+    };
+    row.addEventListener('click', activate);
+    row.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      activate();
+    });
+    list.appendChild(row);
+  });
+  timeline.appendChild(list);
+
+  const resume = document.createElement('a');
+  resume.className = 'mobile-resume-link';
+  resume.href = 'assets/yifan-yang-resume.pdf';
+  resume.target = '_blank';
+  resume.rel = 'noopener noreferrer';
+  resume.innerHTML = `<span>PDF</span><div><strong>杨一帆 — AI GTM 简历</strong><small>2026 · 点击查看</small></div><b aria-hidden="true">↗</b>`;
+  timeline.appendChild(resume);
+  canvas.appendChild(timeline);
+}
 
 const IP_ACTIONS = {
   idle: ['ip-basic-front.png', '跟着光标看 · 点击切换动作'],
@@ -415,9 +507,9 @@ function attachCanvasItemDrag(el) {
       setIpDirection(stepX);
       if (ipCompanion.dataset.action !== 'walk') setIpAction('walk');
     }
-    const zoom = parseFloat(getComputedStyle(canvas).zoom) || 1;
-    el.style.left = Math.max(0, Math.min(CANVAS_WIDTH - el.offsetWidth, ox + dx / zoom)) + 'px';
-    el.style.top = Math.max(0, Math.min(CANVAS_HEIGHT - el.offsetHeight, oy + dy / zoom)) + 'px';
+    const scale = getCanvasScale();
+    el.style.left = Math.max(0, Math.min(CANVAS_WIDTH - el.offsetWidth, ox + dx / scale)) + 'px';
+    el.style.top = Math.max(0, Math.min(CANVAS_HEIGHT - el.offsetHeight, oy + dy / scale)) + 'px';
   });
   const finish = e => {
     if (!dragging) return;
@@ -465,9 +557,9 @@ function attachCanvasItemDrag(el) {
       setIpDirection(stepX);
       if (ipCompanion.dataset.action !== 'walk') setIpAction('walk');
     }
-    const zoom = parseFloat(getComputedStyle(canvas).zoom) || 1;
-    el.style.left = Math.max(0, Math.min(CANVAS_WIDTH - el.offsetWidth, ox + dx / zoom)) + 'px';
-    el.style.top = Math.max(0, Math.min(CANVAS_HEIGHT - el.offsetHeight, oy + dy / zoom)) + 'px';
+    const scale = getCanvasScale();
+    el.style.left = Math.max(0, Math.min(CANVAS_WIDTH - el.offsetWidth, ox + dx / scale)) + 'px';
+    el.style.top = Math.max(0, Math.min(CANVAS_HEIGHT - el.offsetHeight, oy + dy / scale)) + 'px';
   });
   window.addEventListener('mouseup', () => {
     if (!mouseDragging) return;
@@ -493,10 +585,10 @@ function attachCanvasItemDrag(el) {
 function placeIpAtScreenCorner() {
   if (!ipCompanion || !ipCompanion.isConnected || ipCompanion.classList.contains('project-docked')) return;
   if (isMobileLayout()) return;
-  const zoom = parseFloat(getComputedStyle(canvas).zoom) || 1;
-  const edge = window.matchMedia('(max-width: 768px)').matches ? 16 : 24;
-  const renderedWidth = ipCompanion.offsetWidth * zoom;
-  const renderedHeight = ipCompanion.offsetHeight * zoom;
+  const scale = getCanvasScale();
+  const edge = 24;
+  const renderedWidth = ipCompanion.offsetWidth * scale;
+  const renderedHeight = ipCompanion.offsetHeight * scale;
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
   const right = viewportWidth - edge - renderedWidth;
@@ -518,8 +610,8 @@ function placeIpAtScreenCorner() {
     candidate.top + renderedHeight > rect.top - padding
   );
   const target = candidates.find(candidate => !overlaps(candidate)) || candidates[0];
-  const left = target.left / zoom;
-  const top = target.top / zoom;
+  const left = (target.left - desktopOffsetX) / scale;
+  const top = (target.top - desktopOffsetY) / scale;
   ipCompanion.style.left = Math.max(0, Math.min(CANVAS_WIDTH - ipCompanion.offsetWidth, left)) + 'px';
   ipCompanion.style.top = Math.max(0, Math.min(CANVAS_HEIGHT - ipCompanion.offsetHeight, top)) + 'px';
 }
@@ -563,9 +655,9 @@ function attachFolderDrag(folder) {
       folder.classList.add('is-dragging');
     }
     if (moved) {
-      const canvasZoom = parseFloat(getComputedStyle(canvas).zoom) || 1;
-      const newX = Math.max(0, Math.min(CANVAS_WIDTH - FOLDER_W, origX + dx / canvasZoom));
-      const newY = Math.max(0, Math.min(CANVAS_HEIGHT - FOLDER_H, origY + dy / canvasZoom));
+      const scale = getCanvasScale();
+      const newX = Math.max(0, Math.min(CANVAS_WIDTH - FOLDER_W, origX + dx / scale));
+      const newY = Math.max(0, Math.min(CANVAS_HEIGHT - FOLDER_H, origY + dy / scale));
       folder.style.left = newX + 'px';
       folder.style.top = newY + 'px';
       folder.dataset.left = Math.round(newX);
@@ -606,9 +698,9 @@ function attachFolderDrag(folder) {
       folder.classList.add('is-dragging');
     }
     if (!moved) return;
-    const canvasZoom = parseFloat(getComputedStyle(canvas).zoom) || 1;
-    const newX = Math.max(0, Math.min(CANVAS_WIDTH - FOLDER_W, origX + dx / canvasZoom));
-    const newY = Math.max(0, Math.min(CANVAS_HEIGHT - FOLDER_H, origY + dy / canvasZoom));
+    const scale = getCanvasScale();
+    const newX = Math.max(0, Math.min(CANVAS_WIDTH - FOLDER_W, origX + dx / scale));
+    const newY = Math.max(0, Math.min(CANVAS_HEIGHT - FOLDER_H, origY + dy / scale));
     folder.style.left = newX + 'px';
     folder.style.top = newY + 'px';
     folder.dataset.left = Math.round(newX);
@@ -668,13 +760,20 @@ window.addEventListener('mousemove', e => {
 function setCanvas() {
   if (isMobileLayout()) {
     canvas.style.transform = 'none';
+    hero.style.left = '';
+    hero.style.top = '';
+    hero.style.transform = '';
     if (ipCompanion) {
       ipCompanion.style.setProperty('--canvas-pan-x', '0px');
       ipCompanion.style.setProperty('--canvas-pan-y', '0px');
     }
     return;
   }
-  canvas.style.transform = `translate(${panX}px, ${panY}px)`;
+  canvas.style.transform = `translate(${desktopOffsetX}px, ${desktopOffsetY}px) scale(${desktopScale}) translate(${panX}px, ${panY}px)`;
+  hero.style.left = '0px';
+  hero.style.top = '0px';
+  hero.style.transformOrigin = '0 0';
+  hero.style.transform = `translate(${desktopOffsetX + 256 * desktopScale}px, ${desktopOffsetY + 34 * desktopScale}px) scale(${desktopScale})`;
   if (ipCompanion && !ipCompanion.classList.contains('project-docked')) {
     ipCompanion.style.setProperty('--canvas-pan-x', `${-panX}px`);
     ipCompanion.style.setProperty('--canvas-pan-y', `${-panY}px`);
@@ -710,18 +809,22 @@ window.addEventListener('pointerdown', e => {
   pointerMoved = false;
   pointerDownX = e.clientX; pointerDownY = e.clientY;
   isPanning = true;
-  panStartX = e.clientX - panX; panStartY = e.clientY - panY;
+  const scale = getCanvasScale();
+  panStartX = (e.clientX - desktopOffsetX) / scale - panX;
+  panStartY = (e.clientY - desktopOffsetY) / scale - panY;
   document.body.classList.add('panning');
   cRing.style.opacity = '1';
 });
 window.addEventListener('pointermove', e => {
   if (!isPanning) return;
   if (Math.abs(e.clientX - pointerDownX) > 4 || Math.abs(e.clientY - pointerDownY) > 4) pointerMoved = true;
-  panX = e.clientX - panStartX; panY = e.clientY - panStartY;
+  const scale = getCanvasScale();
+  panX = (e.clientX - desktopOffsetX) / scale - panStartX;
+  panY = (e.clientY - desktopOffsetY) / scale - panStartY;
   setCanvas();
 }, { passive: true });
 window.addEventListener('pointerup', () => { isPanning = false; document.body.classList.remove('panning'); setTimeout(() => pointerMoved = false, 50); });
-window.addEventListener('wheel', e => { if (openFolderId || isMobileLayout()) return; panX -= e.deltaX; panY -= e.deltaY; setCanvas(); }, { passive: true });
+window.addEventListener('wheel', e => { if (openFolderId || isMobileLayout()) return; const scale = getCanvasScale(); panX -= e.deltaX / scale; panY -= e.deltaY / scale; setCanvas(); }, { passive: true });
 resetBtn.addEventListener('click', resetCanvas);
 
 /* ====================================================
@@ -917,12 +1020,12 @@ function buildMockup(preview, w, h, label) {
   const quadrant = Number.isInteger(preview.quadrant) ? preview.quadrant : 0;
   const positions = ['0% 0%', '100% 0%', '0% 100%', '100% 100%'];
   const media = image
-    ? `<img class="shot-image${preview.generated ? ' shot-image-generated' : ''}" src="${image}" alt="${label || '项目展示'}" draggable="false">`
+    ? `<img class="shot-image${preview.generated ? ' shot-image-generated' : ''}" src="${image}" alt="${label || '项目展示'}" loading="lazy" decoding="async" draggable="false">`
     : sheet
       ? `<div class="shot-raster" role="img" aria-label="${label || '项目展示'}" style="background-image:url('${sheet}');background-position:${positions[quadrant]};"></div>`
       : `<div class="shot-fallback">${buildScreenshotScene(preview, w, h, w / 186, label)}</div>`;
   const badges = Array.isArray(preview.badges) && preview.badges.length
-    ? `<div class="shot-badges">${preview.badges.map((src, index) => `<img class="shot-badge" src="${src}" alt="${index === 0 ? 'GitHub Trending 每日第一' : 'Trendshift 月度第二'}" draggable="false">`).join('')}</div>`
+    ? `<div class="shot-badges">${preview.badges.map((src, index) => `<img class="shot-badge" src="${src}" alt="${index === 0 ? 'GitHub Trending 每日第一' : 'Trendshift 月度第二'}" loading="lazy" decoding="async" draggable="false">`).join('')}</div>`
     : '';
   const fitClass = preview.fit === 'contain' ? ' shot-media-contain' : '';
   const badgeClass = badges ? ' has-badges' : '';
@@ -1223,33 +1326,12 @@ function openFolder(folder) {
   const key = folder.dataset.project;
   const proj = PROJECTS[key];
   if (!proj) return;
-
-  dockIpForProject();
-
+  const isMobileDetail = isMobileLayout();
   lockDocumentScroll();
 
   const dragHint = document.getElementById('drag-hint');
   if (dragHint) dragHint.classList.remove('in');
   openFolderId = folder.id;
-  const rect = folder.getBoundingClientRect();
-  folder._openState = {
-    parent: folder.parentNode,
-    next: folder.nextSibling,
-    left: folder.style.left,
-    top: folder.style.top,
-    position: folder.style.position,
-    zIndex: folder.style.zIndex,
-    rect
-  };
-  const isMobileDetail = window.matchMedia('(max-width: 768px)').matches;
-  const detailLayout = isMobileDetail ? null : getDesktopDetailLayout(proj.previews.length);
-  folder.classList.add('is-open');
-  folder.style.cssText += `;position:fixed;left:${rect.left}px;top:${rect.top}px;z-index:9100;`;
-  document.body.appendChild(folder);
-  void folder.offsetWidth;
-  folder.style.transition = 'left .68s cubic-bezier(.22,1,.36,1), top .68s cubic-bezier(.22,1,.36,1), transform .48s cubic-bezier(.34,1.56,.64,1)';
-  folder.style.left = (detailLayout ? detailLayout.folderLeft : 70) + 'px';
-  folder.style.top = (detailLayout ? detailLayout.folderTop : 110) + 'px';
 
   overlay.classList.add('show');
   sidebar.classList.add('folder-open');
@@ -1263,21 +1345,45 @@ function openFolder(folder) {
   if (isMobileDetail) {
     const scroller = document.createElement('div');
     scroller.className = 'mobile-folder-scroll';
-    scroller.innerHTML = proj.previews.slice(0, 5).map((preview, i) => {
+    scroller.setAttribute('role', 'dialog');
+    scroller.setAttribute('aria-label', `${FOLDER_META[key]?.title || '项目'}详情`);
+    const projectCopy = `<section class="mobile-project-copy"><span class="mobile-project-kicker">PROJECT OVERVIEW</span><div class="pip-title">${proj.name}</div><div class="pip-meta">${proj.desc}</div><div class="pip-tags">${proj.tags.map(t => `<span class="pip-tag">${t}</span>`).join('')}</div><div class="pip-desc">${proj.note}</div></section>`;
+    const projectImages = proj.previews.slice(0, 5).map((preview, i) => {
       const prefix = PROJECT_IMAGE_SETS[key];
       const enriched = Object.assign({img: preview.img || (prefix ? `assets/${prefix}-${i + 1}.png` : '')}, preview);
-      return `<div class="mobile-folder-img">${buildMockup(enriched, 362, 280, preview.label)}</div>`;
-    }).join('') + `<section class="mobile-project-copy"><div class="pip-title">${proj.name}</div><div class="pip-meta">${proj.desc}</div><div class="pip-tags">${proj.tags.map(t => `<span class="pip-tag">${t}</span>`).join('')}</div><div class="pip-desc">${proj.note}</div></section>`;
+      return `<div class="mobile-folder-img"><span class="mobile-shot-label">${String(i + 1).padStart(2, '0')} · ${preview.label || '项目展示'}</span>${buildMockup(enriched, 362, 280, preview.label)}</div>`;
+    }).join('');
+    scroller.innerHTML = projectCopy + projectImages;
     document.body.appendChild(scroller);
     activePips.push(scroller);
     requestAnimationFrame(() => {
       scroller.classList.add('in');
       scroller.querySelectorAll('.mobile-folder-img').forEach((item, index) => {
-        setTimeout(() => item.classList.add('in'), 80 + index * 110);
+        setTimeout(() => item.classList.add('in'), 70 + index * 85);
       });
     });
     return;
   }
+
+  dockIpForProject();
+  const rect = folder.getBoundingClientRect();
+  folder._openState = {
+    parent: folder.parentNode,
+    next: folder.nextSibling,
+    left: folder.style.left,
+    top: folder.style.top,
+    position: folder.style.position,
+    zIndex: folder.style.zIndex,
+    rect
+  };
+  const detailLayout = getDesktopDetailLayout(proj.previews.length);
+  folder.classList.add('is-open');
+  folder.style.cssText += `;position:fixed;left:${rect.left}px;top:${rect.top}px;z-index:9100;`;
+  document.body.appendChild(folder);
+  void folder.offsetWidth;
+  folder.style.transition = 'left .68s cubic-bezier(.22,1,.36,1), top .68s cubic-bezier(.22,1,.36,1), transform .48s cubic-bezier(.34,1.56,.64,1)';
+  folder.style.left = detailLayout.folderLeft + 'px';
+  folder.style.top = detailLayout.folderTop + 'px';
 
   proj.previews.slice(0, 5).forEach((preview, index) => {
     const cfg = detailLayout.pips[index];
@@ -1288,6 +1394,29 @@ function openFolder(folder) {
 
 function closeFolder() {
   if (!openFolderId || folderClosing) return;
+  if (isMobileLayout()) {
+    folderClosing = true;
+    openFolderId = null;
+    const closing = activePips.splice(0);
+    closing.forEach(pip => {
+      pip.style.transition = 'opacity .18s ease, transform .22s ease';
+      pip.style.opacity = '0';
+      pip.style.transform = 'translateY(10px)';
+      setTimeout(() => pip.remove(), 220);
+    });
+    setTimeout(() => {
+      overlay.classList.remove('show');
+      sidebar.classList.remove('folder-open');
+      document.body.classList.remove('folder-open');
+      backBtn.classList.remove('visible');
+      const contacts = document.getElementById('contact-btns');
+      contacts.style.opacity = '1';
+      contacts.style.pointerEvents = 'auto';
+      setIpAction('good', 900);
+      folderClosing = false;
+    }, 230);
+    return;
+  }
   lockDocumentScroll();
   folderClosing = true;
   const folder = document.getElementById(openFolderId);
@@ -1358,6 +1487,12 @@ document.querySelectorAll('.folder').forEach(folder => {
     if (openFolderId || folderClosing) return;
     openFolder(folder);
   });
+  folder.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    if (openFolderId || folderClosing) return;
+    openFolder(folder);
+  });
 });
 
 document.querySelectorAll('.sb-row[data-folder]').forEach(row => {
@@ -1404,9 +1539,11 @@ window.addEventListener('keydown', e => { if (e.key === 'Escape') closeFolder();
 window.addEventListener('resize', () => {
   // Re-baseline the canvas for the new breakpoint so desktop/mobile
   // layouts never mix stale pan values with fresh media-query positions.
-  const mobileNow = window.matchMedia('(max-width: 768px)').matches;
+  const mobileNow = isMobileLayout();
   panX = 0;
-  panY = mobileNow ? 0 : -28;
+  panY = 0;
+  updateDesktopStageMetrics();
+  if (mobileNow) buildMobileTimeline();
   setCanvas();
   if (!ipCompanion?.dataset.userPositioned && !openFolderId) placeIpAtScreenCorner();
 });
@@ -1418,8 +1555,10 @@ try {
   localStorage.removeItem(CANVAS_ITEM_POSITIONS_KEY);
 } catch (e) {}
 
+updateDesktopStageMetrics();
 setCanvas();
 lockDocumentScroll();
 initFolderPositions();
 initIpCompanion();
 initCanvasItemDragging();
+buildMobileTimeline();

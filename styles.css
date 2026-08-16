@@ -790,7 +790,7 @@ body.dark .pip-tag { background: #484848; color: #bbb; }
   display: flex; flex-direction: column; gap: 16px;
 }
 .mobile-folder-scroll.in { opacity: 1; transform: translateY(0); }
-.mobile-folder-img { width:362px; flex:0 0 auto; border-radius: 20px; padding: 0; transform: translateY(20px); opacity: 0; transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.4,0,.2,1); }
+.mobile-folder-img { width:362px; aspect-ratio:362/280; flex:0 0 auto; border-radius: 20px; padding: 0; transform: translateY(20px); opacity: 0; transition: opacity 0.4s ease, transform 0.4s cubic-bezier(.4,0,.2,1); }
 .mobile-folder-img.in { opacity: 1; transform: translateY(0); }
 .mobile-folder-img .shot-card { box-shadow:0 10px 30px rgba(0,0,0,.16); border-radius:20px; background:#fff; padding:8px; }
 .mobile-folder-img .shot-media { inset:8px; }
@@ -825,37 +825,102 @@ body.craft #f-campus,
 body.craft #f-tree { transform: none; opacity: 1; pointer-events: auto; }
 
 @media (max-width: 768px) {
+  html, body {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  body {
+    min-height: 100vh;
+    height: auto;
+    overflow-y: auto;
+    cursor: auto;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  #c-ring { display:none !important; }
   .figma-sidebar { display: none !important; }
-  #canvas > .ip-companion { transform:translate(var(--canvas-pan-x), var(--canvas-pan-y)); transform-origin:bottom right; }
-  .hero { left: 50%; top: 56px; transform: translateX(-50%); }
-  .hero-big-name { font-size: 44px; }
+  #canvas > .ip-companion {
+    position:fixed;
+    left:auto !important;
+    top:auto !important;
+    right:8px;
+    bottom:max(8px, env(safe-area-inset-bottom, 0px));
+    transform:scale(.78) !important;
+    transform-origin:bottom right;
+  }
+  .hero {
+    position:absolute;
+    left:16px !important;
+    right:16px;
+    top:68px;
+    width:auto;
+    transform:none;
+    text-align:center;
+  }
+  .name-line { justify-content:center; }
+  .hero-big-name { max-width:100%; font-size:34px; letter-spacing:-1px; }
   .hero-sub { font-size: 11px; }
-  .contact-wrap { display:flex; top:12px; right:12px; }
+  .contact-wrap {
+    display:flex;
+    top:max(10px, env(safe-area-inset-top, 0px));
+    left:10px;
+    right:10px;
+    justify-content:flex-end;
+  }
   .contact-wrap .btn-email, .contact-wrap .btn-phone { display:none; }
   .social-link { min-width:58px; height:34px; padding:0 10px; font-size:11px; }
   .push-btn { width: 40px; height: 40px; }
+  .construction-link { flex-basis:40px; }
   .push-btn svg { width: 16px; height: 16px; }
-  .sidebar-collapsed .hero { left: 50%; }
-  #canvas { zoom: .6625; width:480px; height:1900px; }
+  .sidebar-collapsed .hero { left:16px !important; }
+  #canvas {
+    position:relative;
+    width:100%;
+    height:2270px;
+    zoom:1;
+    transform:none !important;
+    transition:none;
+    will-change:auto;
+    touch-action:pan-y;
+  }
   .folder { width: 200px; height: 188px; }
   .folder-label { font-size: 12px; text-align:center; width:100%; }
   .folder-label-title { font-size:13px; }
   .folder-label-role { font-size:10px; }
-  #f-tree { left:140px !important; top:660px !important; }
-  #f-campus { left:140px !important; top:850px !important; }
-  #f-asus { left:140px !important; top:1040px !important; }
-  #f-sheng { left:140px !important; top:1230px !important; }
-  #f-topp { left:140px !important; top:1420px !important; }
-  #f-clacky { left:140px !important; top:1610px !important; }
-  .me-photo-card { left:145px !important; top:150px !important; width:190px; }
+  #f-tree,
+  #f-campus,
+  #f-asus,
+  #f-sheng,
+  #f-topp,
+  #f-clacky { left:calc(50% - 100px) !important; touch-action:pan-y; }
+  #f-tree { top:590px !important; }
+  #f-campus { top:800px !important; }
+  #f-asus { top:1010px !important; }
+  #f-sheng { top:1220px !important; }
+  #f-topp { top:1530px !important; }
+  #f-clacky { top:1740px !important; }
+  .me-photo-card { left:calc(50% - 95px) !important; top:130px !important; width:190px; cursor:default; }
   .me-photo-frame { height:200px; }
-  .me-about-card { left:75px !important; top:455px !important; width:330px; }
-  .resume-card { left:483px !important; top:1020px !important; width:217px; height:337px; padding:20px; }
-  .timeline-rail, .tl-node, .graduation-milestone { display: none; }
+  .me-about-card { left:16px !important; top:390px !important; width:calc(100% - 32px); max-width:none; }
+  .graduation-milestone { display:grid; left:50% !important; top:1425px !important; }
+  .resume-card {
+    display:block !important;
+    left:calc(50% - 110px) !important;
+    top:1950px !important;
+    width:220px;
+    height:280px;
+    padding:20px;
+  }
+  .timeline-rail, .tl-node { display: none; }
   #drag-hint { display: none; }
   #canvasResetBtn { right: 70px; top: 16px; padding: 8px 12px; font-size: 12px; }
   #canvasResetBtn { display:none; }
-  #back-btn { left:40px; top:36px; }
+  #back-btn { left:16px; top:max(18px, env(safe-area-inset-top, 0px)); }
+  .mobile-folder-scroll { padding:72px 14px 48px; }
+  .mobile-folder-img { width:100%; max-width:362px; align-self:center; }
   .floating-behance-btn { position:static; transform:none; animation:none; opacity:1; margin:28px auto 0; width:167px; min-width:167px; }
   .floating-behance-btn:hover { transform:none; }
 }

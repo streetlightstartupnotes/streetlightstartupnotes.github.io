@@ -214,6 +214,7 @@ function decorateFolders() {
    STATE
 ==================================================== */
 const IS_MOBILE_LAYOUT = window.matchMedia('(max-width: 768px)').matches;
+const isMobileLayout = () => window.matchMedia('(max-width: 768px)').matches;
 // Matches the source composition at 1280px: first folder starts near x=90,
 // with the resume and Me Board aligned beneath the same five-column row.
 const INITIAL_PAN_X = 0;
@@ -371,6 +372,7 @@ const FOLDER_W = 200;
 const FOLDER_H = 188;
 
 function initFolderPositions() {
+  const mobileLayout = isMobileLayout();
   const saved = localStorage.getItem(FOLDER_POSITIONS_KEY);
   let positions = {};
   if (saved) {
@@ -380,7 +382,7 @@ function initFolderPositions() {
   folders.forEach(folder => {
     folder.dataset.defaultLeft = folder.style.left || '0px';
     folder.dataset.defaultTop = folder.style.top || '0px';
-    const pos = positions[folder.id];
+    const pos = mobileLayout ? null : positions[folder.id];
     if (pos) {
       const x = Math.max(0, Math.min(CANVAS_WIDTH - FOLDER_W, Number(pos.x) || 0));
       const y = Math.max(0, Math.min(CANVAS_HEIGHT - FOLDER_H, Number(pos.y) || 0));
@@ -392,7 +394,7 @@ function initFolderPositions() {
       folder.dataset.left = parseInt(folder.style.left || 0, 10);
       folder.dataset.top = parseInt(folder.style.top || 0, 10);
     }
-    attachFolderDrag(folder);
+    if (!mobileLayout) attachFolderDrag(folder);
   });
 }
 
@@ -518,6 +520,7 @@ function attachCanvasItemDrag(el) {
 
 function placeIpAtScreenCorner() {
   if (!ipCompanion || !ipCompanion.isConnected || ipCompanion.classList.contains('project-docked')) return;
+  if (isMobileLayout()) return;
   const zoom = parseFloat(getComputedStyle(canvas).zoom) || 1;
   const edge = window.matchMedia('(max-width: 768px)').matches ? 16 : 24;
   const renderedWidth = ipCompanion.offsetWidth * zoom;
@@ -550,6 +553,7 @@ function placeIpAtScreenCorner() {
 }
 
 function initCanvasItemDragging() {
+  const mobileLayout = isMobileLayout();
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(CANVAS_ITEM_POSITIONS_KEY) || '{}'); } catch (e) { saved = {}; }
   placeIpAtScreenCorner();
@@ -559,12 +563,12 @@ function initCanvasItemDragging() {
     el.dataset.canvasDragKey = key;
     el.dataset.defaultLeft = el.style.left || '0px';
     el.dataset.defaultTop = el.style.top || '0px';
-    const pos = el === ipCompanion ? null : saved[key];
+    const pos = mobileLayout || el === ipCompanion ? null : saved[key];
     if (pos) {
       el.style.left = Math.max(0, Math.min(CANVAS_WIDTH - el.offsetWidth, Number(pos.x) || 0)) + 'px';
       el.style.top = Math.max(0, Math.min(CANVAS_HEIGHT - el.offsetHeight, Number(pos.y) || 0)) + 'px';
     }
-    attachCanvasItemDrag(el);
+    if (!mobileLayout) attachCanvasItemDrag(el);
   });
 }
 
@@ -710,6 +714,14 @@ window.addEventListener('mousemove', e => {
    CANVAS PANNING
 ==================================================== */
 function setCanvas() {
+  if (isMobileLayout()) {
+    canvas.style.transform = 'none';
+    if (ipCompanion) {
+      ipCompanion.style.setProperty('--canvas-pan-x', '0px');
+      ipCompanion.style.setProperty('--canvas-pan-y', '0px');
+    }
+    return;
+  }
   canvas.style.transform = `translate(${panX}px, ${panY}px)`;
   if (ipCompanion && !ipCompanion.classList.contains('project-docked')) {
     ipCompanion.style.setProperty('--canvas-pan-x', `${-panX}px`);
@@ -717,6 +729,7 @@ function setCanvas() {
   }
 }
 function lockDocumentScroll() {
+  if (isMobileLayout()) return;
   if (window.scrollX || window.scrollY) window.scrollTo(0, 0);
 }
 window.addEventListener('scroll', lockDocumentScroll, { passive: true });
@@ -738,6 +751,7 @@ function resetCanvas() {
 }
 
 window.addEventListener('pointerdown', e => {
+  if (isMobileLayout()) return;
   if (e.target.closest('.figma-sidebar') || e.target.closest('.hero') || e.target.closest('.contact-wrap') || e.target.closest('.proj-preview-pip') || e.target.closest('#back-btn') || e.target.closest('#canvasResetBtn')) return;
   if (e.target.closest('.push-btn') || e.target.closest('.folder')) return;
   if (e.button !== 0 && e.button !== 1) return;
@@ -755,7 +769,7 @@ window.addEventListener('pointermove', e => {
   setCanvas();
 }, { passive: true });
 window.addEventListener('pointerup', () => { isPanning = false; document.body.classList.remove('panning'); setTimeout(() => pointerMoved = false, 50); });
-window.addEventListener('wheel', e => { if (openFolderId) return; panX -= e.deltaX; panY -= e.deltaY; setCanvas(); }, { passive: true });
+window.addEventListener('wheel', e => { if (openFolderId || isMobileLayout()) return; panX -= e.deltaX; panY -= e.deltaY; setCanvas(); }, { passive: true });
 resetBtn.addEventListener('click', resetCanvas);
 
 /* ====================================================
@@ -1304,7 +1318,12 @@ function openFolder(folder) {
     }).join('') + `<section class="mobile-project-copy"><div class="pip-title">${proj.name}</div><div class="pip-meta">${proj.desc}</div><div class="pip-tags">${proj.tags.map(t => `<span class="pip-tag">${t}</span>`).join('')}</div><div class="pip-desc">${proj.note}</div></section>`;
     document.body.appendChild(scroller);
     activePips.push(scroller);
-    requestAnimationFrame(() => scroller.classList.add('in'));
+    requestAnimationFrame(() => {
+      scroller.classList.add('in');
+      scroller.querySelectorAll('.mobile-folder-img').forEach((item, index) => {
+        setTimeout(() => item.classList.add('in'), 80 + index * 110);
+      });
+    });
     return;
   }
 

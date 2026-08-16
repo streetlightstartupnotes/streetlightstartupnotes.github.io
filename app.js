@@ -373,43 +373,17 @@ const FOLDER_H = 188;
 
 function initFolderPositions() {
   const mobileLayout = isMobileLayout();
-  const saved = localStorage.getItem(FOLDER_POSITIONS_KEY);
-  let positions = {};
-  if (saved) {
-    try { positions = JSON.parse(saved); } catch (e) { positions = {}; }
-  }
   const folders = Array.from(document.querySelectorAll('.folder'));
   folders.forEach(folder => {
     folder.dataset.defaultLeft = folder.style.left || '0px';
     folder.dataset.defaultTop = folder.style.top || '0px';
-    const pos = mobileLayout ? null : positions[folder.id];
-    if (pos) {
-      const x = Math.max(0, Math.min(CANVAS_WIDTH - FOLDER_W, Number(pos.x) || 0));
-      const y = Math.max(0, Math.min(CANVAS_HEIGHT - FOLDER_H, Number(pos.y) || 0));
-      folder.style.left = x + 'px';
-      folder.style.top = y + 'px';
-      folder.dataset.left = x;
-      folder.dataset.top = y;
-    } else {
-      folder.dataset.left = parseInt(folder.style.left || 0, 10);
-      folder.dataset.top = parseInt(folder.style.top || 0, 10);
-    }
+    folder.dataset.left = parseInt(folder.style.left || 0, 10);
+    folder.dataset.top = parseInt(folder.style.top || 0, 10);
     if (!mobileLayout) attachFolderDrag(folder);
   });
 }
 
 const CANVAS_ITEM_POSITIONS_KEY = 'yifan-canvas-item-positions-v4';
-
-function saveCanvasItemPositions() {
-  const positions = {};
-  document.querySelectorAll('[data-canvas-drag-key]').forEach(el => {
-    positions[el.dataset.canvasDragKey] = {
-      x: parseFloat(el.style.left) || 0,
-      y: parseFloat(el.style.top) || 0
-    };
-  });
-  localStorage.setItem(CANVAS_ITEM_POSITIONS_KEY, JSON.stringify(positions));
-}
 
 function attachCanvasItemDrag(el) {
   let sx = 0, sy = 0, ox = 0, oy = 0, lastX = 0, dragging = false, moved = false;
@@ -451,7 +425,6 @@ function attachCanvasItemDrag(el) {
     if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId);
     el.classList.remove('is-dragging');
     if (moved) {
-      saveCanvasItemPositions();
       if (el === ipCompanion) {
         el.dataset.userPositioned = 'true';
         if (!openFolderId) restoreIpRestingAction();
@@ -501,7 +474,6 @@ function attachCanvasItemDrag(el) {
     mouseDragging = false;
     el.classList.remove('is-dragging');
     if (moved) {
-      saveCanvasItemPositions();
       if (el === ipCompanion) {
         el.dataset.userPositioned = 'true';
         if (!openFolderId) restoreIpRestingAction();
@@ -554,8 +526,6 @@ function placeIpAtScreenCorner() {
 
 function initCanvasItemDragging() {
   const mobileLayout = isMobileLayout();
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(CANVAS_ITEM_POSITIONS_KEY) || '{}'); } catch (e) { saved = {}; }
   placeIpAtScreenCorner();
   const items = Array.from(document.querySelectorAll('#canvas > .experience-card, #canvas > .tools-card, #canvas > .me-about-card, #canvas > .me-photo-card, #canvas > .ip-companion'));
   items.forEach((el, index) => {
@@ -563,24 +533,8 @@ function initCanvasItemDragging() {
     el.dataset.canvasDragKey = key;
     el.dataset.defaultLeft = el.style.left || '0px';
     el.dataset.defaultTop = el.style.top || '0px';
-    const pos = mobileLayout || el === ipCompanion ? null : saved[key];
-    if (pos) {
-      el.style.left = Math.max(0, Math.min(CANVAS_WIDTH - el.offsetWidth, Number(pos.x) || 0)) + 'px';
-      el.style.top = Math.max(0, Math.min(CANVAS_HEIGHT - el.offsetHeight, Number(pos.y) || 0)) + 'px';
-    }
     if (!mobileLayout) attachCanvasItemDrag(el);
   });
-}
-
-function saveFolderPositions() {
-  const positions = {};
-  document.querySelectorAll('.folder').forEach(folder => {
-    positions[folder.id] = {
-      x: parseInt(folder.style.left || folder.dataset.left || 0, 10),
-      y: parseInt(folder.style.top || folder.dataset.top || 0, 10)
-    };
-  });
-  localStorage.setItem(FOLDER_POSITIONS_KEY, JSON.stringify(positions));
 }
 
 function attachFolderDrag(folder) {
@@ -624,7 +578,6 @@ function attachFolderDrag(folder) {
     dragging = false;
     folder.classList.remove('is-dragging');
     if (moved) {
-      saveFolderPositions();
       setTimeout(() => { folder._didDrag = false; pointerMoved = false; }, 0);
     }
   };
@@ -666,7 +619,6 @@ function attachFolderDrag(folder) {
     mouseDragging = false;
     folder.classList.remove('is-dragging');
     if (moved) {
-      saveFolderPositions();
       setTimeout(() => { folder._didDrag = false; pointerMoved = false; }, 0);
     }
   });
@@ -1458,6 +1410,13 @@ window.addEventListener('resize', () => {
   setCanvas();
   if (!ipCompanion?.dataset.userPositioned && !openFolderId) placeIpAtScreenCorner();
 });
+
+// The portfolio may be rearranged for play, but every fresh visit should start
+// from the authored composition instead of inheriting stale positions.
+try {
+  localStorage.removeItem(FOLDER_POSITIONS_KEY);
+  localStorage.removeItem(CANVAS_ITEM_POSITIONS_KEY);
+} catch (e) {}
 
 setCanvas();
 lockDocumentScroll();

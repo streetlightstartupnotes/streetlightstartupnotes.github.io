@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>施工中 — 杨一帆作品集开场</title>
+<meta name="description" content="杨一帆作品集：AI 产品增长、市场验证、B2B 平台运营与冷启动经验。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/zhi-yu-zhi-shan.svg">
+<link rel="preload" as="image" href="assets/folder-welcome-word.png">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --matrix-black: #000503; --matrix-deep: #00170b; --matrix-green: #00ff73;
+  --matrix-green-soft: #6dffa8; --matrix-green-dim: #158a48; --matrix-line: rgba(0,255,115,.22);
+  --ink: #c9ffdc; --ink-light: #78d79b; --ink-faint: #32a861;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Noto Sans SC', sans-serif; -webkit-font-smoothing: antialiased; color: var(--ink); }
+.hero-section { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, #062817 0%, #001008 38%, #000 78%); z-index: 10; overflow: hidden; isolation:isolate; }
+.hero-section::before { content:''; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.34; background-image: linear-gradient(rgba(0,255,115,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,115,.035) 1px, transparent 1px); background-size:32px 32px; mask-image:radial-gradient(circle at center, #000 25%, transparent 82%); }
+.hero-section::after { content:''; position:absolute; inset:0; z-index:4; pointer-events:none; background:radial-gradient(circle at center, transparent 42%, rgba(0,0,0,.72) 100%); box-shadow:inset 0 0 120px rgba(0,0,0,.88); }
+.macbook-wrapper { position:relative; z-index:2; display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; filter:drop-shadow(0 0 32px rgba(0,255,115,.2)); }
+.macbook-wrapper.zoom-transition { transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; }
+.macbook-screen-bezel { position: relative; background: linear-gradient(145deg,#101612,#020403 60%,#0b120e); border:1px solid rgba(0,255,115,.35); border-bottom:0; border-radius: 14px 14px 0 0; padding: 14px; padding-top: 0; width: 708px; max-width: 92vw; cursor: pointer; box-shadow:0 0 0 1px rgba(0,0,0,.85), inset 0 0 20px rgba(0,255,115,.055), 0 0 34px rgba(0,255,115,.16); }
+.macbook-notch { width: 130px; height: 14px; background: #030604; border-radius: 0 0 10px 10px; margin: 0 auto; position: relative; z-index: 3; box-shadow:0 1px 0 rgba(0,255,115,.18); }
+.macbook-screen { width: 680px; max-width: 100%; aspect-ratio: 680 / 440; background: #000; border:1px solid rgba(0,255,115,.22); border-radius: 4px; overflow: hidden; position: relative; box-shadow:inset 0 0 44px rgba(0,255,115,.12); }
+.macbook-screen::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(circle at 50% 45%, transparent 20%, rgba(0,0,0,.48) 100%); }
+.macbook-screen::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,115,0.055) 2px, rgba(0,255,115,0.055) 3px); pointer-events: none; z-index: 4; mix-blend-mode:screen; }
+#matrixRain { position:absolute; inset:0; width:100%; height:100%; z-index:0; opacity:.62; pointer-events:none; }
+.macbook-hinge { width: 720px; max-width: 94vw; height: 3px; background: linear-gradient(180deg, #1c3326 0%, #020503 100%); border-top:1px solid rgba(0,255,115,.38); border-radius: 0 0 2px 2px; box-shadow:0 0 10px rgba(0,255,115,.2); }
+.macbook-base { width: 760px; max-width: 96vw; height: 14px; background: linear-gradient(180deg, #111a15 0%, #020403 35%, #0a100c 72%, #000 100%); border:1px solid rgba(0,255,115,.18); border-top:0; border-radius: 0 0 10px 10px; box-shadow:0 8px 24px rgba(0,0,0,.82); }
+.macbook-shadow { width: 700px; max-width: 90vw; height: 40px; background: radial-gradient(ellipse at center, rgba(0,255,115,.18) 0%, rgba(0,0,0,.42) 38%, transparent 72%); margin-top: 4px; }
+.terminal { z-index:2; padding: 16px 20px; font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.7; height: 100%; overflow: hidden; position: relative; background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,7,3,.42) 70%,rgba(0,0,0,.68)); text-shadow:0 0 7px rgba(0,255,115,.48); }
+.terminal.scale-through { transform: scale(1.15); opacity: 0; filter: blur(2px); transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+.terminal-titlebar { display: flex; align-items: center; gap: 7px; padding-bottom: 12px; border-bottom: 1px solid var(--matrix-line); margin-bottom: 14px; }
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dot.red { background: #06351b; box-shadow:0 0 7px rgba(0,255,115,.25); }
+.terminal-dot.yellow { background: #118548; box-shadow:0 0 8px rgba(0,255,115,.42); }
+.terminal-dot.green { background: var(--matrix-green); box-shadow:0 0 10px rgba(0,255,115,.72); }
+.terminal-title { color: rgba(109,255,168,.62); font-size: 11px; margin: 0 auto; font-family: 'Fira Code', monospace; letter-spacing:.04em; }
+#terminalLines { transition:transform .2s ease; }
+.term-line { opacity: 0; transform: translateY(6px); white-space: pre-wrap; word-break: break-all; }
+.term-line.visible { animation: lineReveal 0.35s ease forwards; }
+@keyframes lineReveal { to { opacity: 1; transform: translateY(0); } }
+.term-prompt { color: var(--matrix-green); font-weight: 700; }
+.term-cmd { color: #d4ffe3; font-weight: 500; }
+.term-output { color: var(--matrix-green-soft); }
+.term-gold { background: rgba(0,255,115,.13); color: #9cffbd; border:1px solid rgba(0,255,115,.55); box-shadow:0 0 18px rgba(0,255,115,.12), inset 0 0 12px rgba(0,255,115,.08); font-weight: 700; font-size: 14px; padding: 2px 8px; border-radius: 2px; }
+.term-motto { display:inline-flex; align-items:center; gap:7px; min-height:28px; padding:2px 8px; border:1px solid rgba(0,255,115,.55); border-radius:2px; color:#9cffbd; background:rgba(0,255,115,.13); box-shadow:0 0 18px rgba(0,255,115,.12),inset 0 0 12px rgba(0,255,115,.08); }
+.term-motto-svg { display:block; width:auto; height:18px; }
+.cursor { display: inline-block; width: 9px; height: 17px; background: var(--matrix-green); box-shadow:0 0 10px rgba(0,255,115,.85); vertical-align: middle; margin-left: 2px; animation: blink 1s step-end infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.hero-cta { position:relative; z-index:5; margin-top: 36px; text-align: center; opacity: 0; transition: opacity 0.6s ease; cursor: pointer; }
+.hero-cta.visible { opacity: 1; }
+.hero-cta.hidden { opacity: 0; pointer-events: none; }
+.hero-cta .cta-text { font-family: 'Fira Code', monospace; font-size: 13px; color: var(--matrix-green); letter-spacing: 1.6px; text-shadow:0 0 12px rgba(0,255,115,.62); }
+.hero-cta .cta-arrow { font-size: 18px; color: var(--matrix-green-dim); margin-top: 8px; animation: bounce 1.6s ease infinite; }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+.transition-overlay { position: fixed; inset: 0; background: #001008; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.5s ease, background 0.32s ease; }
+.transition-overlay.active { opacity: 1; pointer-events: auto; }
+.transition-overlay.welcome-cut { background:#fbfdff; }
+.welcome-stage { position:fixed; inset:0; z-index:8; display:grid; place-items:center; overflow:hidden; visibility:hidden; opacity:0; pointer-events:none; background:#fbfdff; transition:none; }
+.welcome-stage.is-ready { visibility:visible; opacity:1; }
+    .welcome-word { display:block; width:clamp(620px,92vw,1400px); max-width:none; height:auto; pointer-events:none; user-select:none; opacity:0; filter:none; transform:translateY(24px) scale(.9); transform-origin:center; transition:none; }
+    .welcome-stage.is-visible .welcome-word { opacity:1; filter:none; transform:translateY(0) scale(1); }
+.loaded-controls { position: fixed; top: 22px; left: 22px; z-index: 3; display: flex; align-items: center; gap: 8px; padding: 6px; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; background: rgba(16, 49, 92, 0.3); box-shadow: 0 12px 36px rgba(11, 42, 82, 0.2); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.loaded-control { appearance: none; border: 0; border-radius: 999px; padding: 9px 13px; background: transparent; color: rgba(255,255,255,0.9); font: 500 12px/1 'Noto Sans SC', sans-serif; letter-spacing: 0.02em; text-decoration: none; cursor: pointer; transition: color 180ms ease, background 180ms ease, transform 180ms ease; }
+.loaded-control:hover, .loaded-control:focus-visible { color: #fff; background: rgba(255,255,255,0.16); outline: none; }
+.loaded-control:active { transform: scale(0.96); }
+@media (max-width: 768px) { .macbook-screen-bezel { padding: 10px; padding-top: 0; } .macbook-notch { width: 80px; height: 10px; } .terminal { padding:8px 10px; font-size:9px; line-height:1.45; } .terminal-titlebar { padding-bottom:6px; margin-bottom:7px; } .terminal-dot { width:7px; height:7px; } .terminal-title { font-size:8px; } .terminal.is-launching #terminalLines { transform:translateY(-8px); } .term-gold { font-size: 12px; } .term-motto { min-height:20px; gap:4px; padding:1px 5px; } .term-motto-svg { height:13px; } .cursor { width:6px; height:11px; } .hero-cta .cta-text { font-size: 12px; } .loaded-controls { top: 14px; left: 14px; } .welcome-word { width:96vw; } }
+@media (prefers-reduced-motion: reduce) { .welcome-word,.welcome-stage { transition-duration:.01ms !important; } }
+</style>
+</head>
+<body>
+<div class="transition-overlay" id="transitionOverlay"></div>
+
+<section class="hero-section" id="heroSection">
+  <div class="macbook-wrapper zoom-transition" id="macbookWrapper">
+    <div class="macbook-screen-bezel" id="macbookBezel">
+      <div class="macbook-notch"></div>
+      <div class="macbook-screen" id="macbookScreen">
+        <canvas id="matrixRain" aria-hidden="true"></canvas>
+        <div class="terminal" id="terminal">
+          <div class="terminal-titlebar">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">root@yifan://matrix_portfolio</span>
+          </div>
+          <div id="terminalLines"></div>
+        </div>
+      </div>
+    </div>
+    <div class="macbook-hinge"></div>
+    <div class="macbook-base"></div>
+    <div class="macbook-shadow"></div>
+  </div>
+
+  <div class="hero-cta" id="heroCta">
+    <div class="cta-text">[ PRESS ENTER TO ENTER THE MATRIX ]</div>
+    <div class="cta-arrow">↓</div>
+  </div>
+</section>
+
+<section class="welcome-stage" id="welcomeStage" aria-hidden="true">
+  <!-- Artwork source: yufeiyang171/yang-mini-portfolio, CC BY-NC 4.0. -->
+  <img class="welcome-word" src="assets/folder-welcome-word.png" alt="Welcome" draggable="false">
+</section>
+
+<script>
+(function() {
+  'use strict';
+  var typingDone = false, launched = false;
+  var container = document.getElementById('terminalLines');
+  var heroCta = document.getElementById('heroCta');
+  var heroSection = document.getElementById('heroSection');
+  var macbookBezel = document.getElementById('macbookBezel');
+  var transitionOverlay = document.getElementById('transitionOverlay');
+  var welcomeStage = document.getElementById('welcomeStage');
+  var skipTyping = null;
+  var matrixCanvas = document.getElementById('matrixRain');
+  var matrixCtx = matrixCanvas.getContext('2d');
+  var matrixFrame = 0, matrixDrops = [], matrixFontSize = 14;
+
+  function resizeMatrix() {
+    var screen = document.getElementById('macbookScreen');
+    var ratio = Math.min(window.devicePixelRatio || 1, 2);
+    var width = Math.max(1, screen.clientWidth);
+    var height = Math.max(1, screen.clientHeight);
+    matrixCanvas.width = Math.round(width * ratio);
+    matrixCanvas.height = Math.round(height * ratio);
+    matrixCanvas.style.width = width + 'px';
+    matrixCanvas.style.height = height + 'px';
+    matrixCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    var columns = Math.ceil(width / matrixFontSize);
+    matrixDrops = Array.from({ length: columns }, function(_, index) { return -Math.floor(Math.random() * 34) - (index % 7); });
+  }
+
+  function drawMatrix() {
+    var width = matrixCanvas.clientWidth;
+    var height = matrixCanvas.clientHeight;
+    var glyphs = '01アイウエオカキクケコサシスセソABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    matrixCtx.fillStyle = 'rgba(0,5,3,.13)';
+    matrixCtx.fillRect(0, 0, width, height);
+    matrixCtx.font = matrixFontSize + 'px Fira Code, monospace';
+    for (var i = 0; i < matrixDrops.length; i += 1) {
+      var glyph = glyphs.charAt(Math.floor(Math.random() * glyphs.length));
+      var y = matrixDrops[i] * matrixFontSize;
+      matrixCtx.fillStyle = Math.random() > .94 ? '#d5ffe4' : (Math.random() > .7 ? '#00ff73' : '#0a8c45');
+      matrixCtx.fillText(glyph, i * matrixFontSize, y);
+      if (y > height && Math.random() > .975) matrixDrops[i] = -Math.floor(Math.random() * 20);
+      matrixDrops[i] += 1;
+    }
+    matrixFrame = requestAnimationFrame(drawMatrix);
+  }
+
+  resizeMatrix();
+  drawMatrix();
+  window.addEventListener('resize', resizeMatrix);
+
+  var terminalData = [
+    { type: 'cmd', prompt: '$ ', text: 'whoami' },
+    { type: 'output', prefix: '> ', text: 'YIFAN YANG' },
+    { type: 'blank' },
+    { type: 'cmd', prompt: '$ ', text: 'cat about.md' },
+    { type: 'output', prefix: '> ', text: 'AI GTM & 市场增长' },
+    { type: 'blank' },
+    { type: 'cmd', prompt: '$ ', text: 'echo "止于至善"' },
+    { type: 'motto', prefix: '> ' },
+    { type: 'blank' },
+    { type: 'cmd', prompt: '$ ', text: 'open portfolio.playground', cursor: true }
+  ];
+
+  function renderLine(item) {
+    var div = document.createElement('div'); div.className = 'term-line';
+    if (item.type === 'blank') div.innerHTML = '&nbsp;';
+    else if (item.type === 'cmd') { var html = '<span class="term-prompt">' + item.prompt + '</span><span class="term-cmd">' + item.text + '</span>'; if (item.cursor) html += '<span class="cursor" id="mainCursor"></span>'; div.innerHTML = html; }
+    else if (item.type === 'output') div.innerHTML = '<span class="term-output">' + item.prefix + item.text + '</span>';
+    else if (item.type === 'gold') div.innerHTML = '<span class="term-gold">' + item.prefix + item.text + '</span>';
+    else if (item.type === 'motto') div.innerHTML = '<span class="term-motto"><span aria-hidden="true">' + item.prefix + '</span><img class="term-motto-svg" src="assets/zhi-yu-zhi-shan.svg" alt="止于至善" draggable="false"></span>';
+    container.appendChild(div); return div;
+  }
+
+  function finishIntro() { if (typingDone) return; typingDone = true; heroCta.classList.add('visible'); }
+
+  function runIntro() {
+    var divs = []; var lineDelay = 0;
+    terminalData.forEach(function(item) {
+      var div = renderLine(item);
+      if (item.type === 'blank') lineDelay += 200;
+      else if (item.type === 'cmd') { lineDelay += 400; div.style.animationDelay = lineDelay + 'ms'; lineDelay += 600; }
+      else if (item.type === 'output') { lineDelay += 150; div.style.animationDelay = lineDelay + 'ms'; lineDelay += 300; }
+      else if (item.type === 'gold' || item.type === 'motto') { lineDelay += 150; div.style.animationDelay = lineDelay + 'ms'; lineDelay += 400; }
+      divs.push(div); setTimeout(function() { div.classList.add('visible'); }, 50);
+    });
+    var typingTimeout = setTimeout(finishIntro, lineDelay + 600);
+    skipTyping = function() { if (typingDone) return; clearTimeout(typingTimeout); divs.forEach(function(d) { d.style.animationDelay = '0ms'; d.classList.add('visible'); }); finishIntro(); };
+    heroSection.addEventListener('click', function() { if (!typingDone) skipTyping(); });
+    document.addEventListener('keydown', function(e) { if (!typingDone && e.key !== 'Enter') skipTyping(); });
+  }
+
+  function launch() {
+    if (launched || !typingDone) return; launched = true;
+    heroCta.classList.remove('visible'); heroCta.classList.add('hidden');
+    document.getElementById('terminal').classList.add('is-launching');
+    var cursorEl = document.getElementById('mainCursor'); if (cursorEl) cursorEl.remove();
+    var launchLine = document.createElement('div'); launchLine.className = 'term-line'; launchLine.innerHTML = '<span class="term-output">&gt; launching...</span>'; container.appendChild(launchLine); setTimeout(function() { launchLine.classList.add('visible'); }, 50);
+    var progressLine = document.createElement('div'); progressLine.className = 'term-line'; progressLine.innerHTML = '<span class="term-prompt" id="progressText">[░░░░░░░░░░░░] 0%</span>'; container.appendChild(progressLine); setTimeout(function() { progressLine.classList.add('visible'); }, 300);
+    var progress = 0, barLength = 12;
+    setTimeout(function() {
+      var progressText = document.getElementById('progressText');
+      var interval = setInterval(function() {
+        progress += 1; if (progress > barLength) { clearInterval(interval); beginZoom(); return; }
+        var filled = '', empty = ''; for (var i = 0; i < barLength; i++) { if (i < progress) filled += '█'; else empty += '░'; }
+        var pct = Math.round((progress / barLength) * 100); if (progressText) progressText.textContent = '[' + filled + empty + '] ' + pct + '%';
+      }, 80);
+    }, 500);
+  }
+
+  function beginZoom() {
+    var wrapper = document.getElementById('macbookWrapper'); var screen = document.getElementById('macbookScreen'); var terminal = document.getElementById('terminal');
+    var screenRect = screen.getBoundingClientRect(); var vw = window.innerWidth, vh = window.innerHeight;
+    var scale = Math.max(vw / screenRect.width, vh / screenRect.height) * 1.05;
+    var screenCenterX = screenRect.left + screenRect.width / 2, screenCenterY = screenRect.top + screenRect.height / 2;
+    var wrapperRect = wrapper.getBoundingClientRect(); var wrapperCenterX = wrapperRect.left + wrapperRect.width / 2, wrapperCenterY = wrapperRect.top + wrapperRect.height / 2;
+    var offsetX = screenCenterX - wrapperCenterX, offsetY = screenCenterY - wrapperCenterY;
+    var tx = vw / 2 - (wrapperCenterX + offsetX * scale), ty = vh / 2 - (wrapperCenterY + offsetY * scale);
+    setTimeout(function() { terminal.classList.add('scale-through'); }, 200);
+    wrapper.classList.add('zoom-transition'); requestAnimationFrame(function() { requestAnimationFrame(function() { wrapper.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) scale(' + scale + ')'; }); });
+    setTimeout(function() { transitionOverlay.classList.add('active'); }, 1200);
+    setTimeout(function() { transitionOverlay.classList.add('welcome-cut'); }, 1500);
+    setTimeout(function() {
+      cancelAnimationFrame(matrixFrame);
+      heroSection.style.display = 'none';
+      welcomeStage.classList.add('is-ready');
+      window.scrollTo(0, 0);
+      transitionOverlay.classList.remove('active');
+
+      setTimeout(function() {
+        welcomeStage.classList.add('is-visible');
+        welcomeStage.setAttribute('aria-hidden', 'false');
+      }, 280);
+    }, 1800);
+  }
+
+  document.addEventListener('keydown', function(e) { if (e.key === 'Enter' && !launched) { e.preventDefault(); if (!typingDone && skipTyping) skipTyping(); launch(); } });
+  macbookBezel.addEventListener('click', function() { if (typingDone) launch(); });
+  heroCta.addEventListener('click', launch);
+  runIntro();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.DS_Store
+audit-*.png
+_*.js
+_*.css
+*.bak
+*.v2.bak
+*.v3.bak
+design-qa.md
+interaction.test.cjs
+portfolio-standalone.html
+serve.command
+projects/

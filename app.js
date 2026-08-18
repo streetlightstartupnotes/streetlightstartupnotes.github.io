@@ -322,14 +322,6 @@ function buildMobileTimeline() {
     list.appendChild(row);
   });
   timeline.appendChild(list);
-
-  const resume = document.createElement('a');
-  resume.className = 'mobile-resume-link';
-  resume.href = 'assets/yifan-yang-resume.pdf';
-  resume.target = '_blank';
-  resume.rel = 'noopener noreferrer';
-  resume.innerHTML = `<span>PDF</span><div><strong>杨一帆 — AI GTM 简历</strong><small>2026 · 点击查看</small></div><b aria-hidden="true">↗</b>`;
-  timeline.appendChild(resume);
   canvas.appendChild(timeline);
 }
 
